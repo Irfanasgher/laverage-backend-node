@@ -63,10 +63,15 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://IrfanAsgher:1jVH2A6PqVcCmC3O@cluster0.odflidq.mongodb.net/laverage?retryWrites=true&w=majority"
+    // "mongodb+srv://IrfanAsgher:1jVH2A6PqVcCmC3O@cluster0.odflidq.mongodb.net/laverage?retryWrites=true&w=majority"
+    "mongodb://IrfanAsgher:1jVH2A6PqVcCmC3O@ac-7bk8cua-shard-00-00.odflidq.mongodb.net:27017,ac-7bk8cua-shard-00-01.odflidq.mongodb.net:27017,ac-7bk8cua-shard-00-02.odflidq.mongodb.net:27017/laverage?ssl=true&replicaSet=atlas-8adlfw-shard-0&authSource=admin&retryWrites=true&w=majority"
   )
   .then((result) => {
+    const server = app.listen(8080);
     console.log("Connected!...");
-    app.listen(8080);
+    const io = require("./socket").init(server);
+    io.on("connection", (socket) => {
+      console.log("Client connected");
+    });
   })
   .catch((err) => console.log(err));
