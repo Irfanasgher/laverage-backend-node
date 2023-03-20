@@ -1,4 +1,5 @@
 const path = require("path");
+const cors = require("cors");
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -40,14 +41,26 @@ app.use(
 );
 app.use("/images", express.static(path.join(__dirname, "images")));
 
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Max-Age", "86400");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
   );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
+  // if (req.method === "OPTIONS") {
+  //   return req.text("", 200);
+  // } else {
+  //   return next();
+  // }
 });
 
 app.use("/feed", feedRoutes);
